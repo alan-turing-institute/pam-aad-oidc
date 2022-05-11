@@ -6,18 +6,21 @@
 #include <security/pam_appl.h>
 #include <security/pam_ext.h>
 
+// Local includes
+#include <pam.h>
+
 
 // Retrieve a username from a PAM handle
-char* get_user(pam_handle_t* handle) {
+char* get_username(pam_handle_t* handle) {
     if (!handle) {
         return NULL;
     }
-    const char* user = NULL;
+    const char* username = NULL;
     // pam_get_item outputs into `const void**` so we must cast `user` accordingly
-    if (pam_get_item(handle, PAM_USER, (const void**)&user) != PAM_SUCCESS) {
+    if (pam_get_item(handle, PAM_USER, (const void**)&username) != PAM_SUCCESS) {
         return NULL;
     }
-    return strdup(user);
+    return strdup(username);
 }
 
 
