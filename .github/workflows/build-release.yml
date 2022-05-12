@@ -1,7 +1,12 @@
+---
 name: Build release binaries
 on:
   release:
     types: [created]
+
+# github-action-publish-binaries needs 'contents:write'
+permissions:
+  contents: write
 
 jobs:
   releases-matrix:
@@ -21,11 +26,16 @@ jobs:
         with:
           go-version: '^1.18'
 
+      - name: Install dependencies
+        run: sudo apt-get install -y libpam-dev
+
       - name: Generate the artifacts
-        run: make
+        run: |
+          make
+          mv pam_aad_oidc.so pam_aad_oidc.${{ matrix.goarch }}.so
 
       - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@v2
+        uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
