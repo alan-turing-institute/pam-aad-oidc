@@ -35,3 +35,8 @@ char* get_password(pam_handle_t* handle) {
     }
     return strdup(password);
 }
+
+// Get the specified item from an array
+char *get_array_item(int i, char **argv) {
+  return strdup(argv[i]);
+}
