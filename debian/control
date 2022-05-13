@@ -1,0 +1,10 @@
+Package: pam-aad-oidc
+version: 0.1.0-1
+Maintainer: Jim Madge <jmadge@turing.ac.uk>
+Homepage: https://github.com/alan-turing-institute/pam-aad-oidc
+Section: admin
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.17), libpam-runtime (>= 1.0.1-6), libpam0g (>= 1.1.3-2)
+Description: PAM module for AzureAD
+  PAM module connecting to AzureAD for user authentication using OpenID Connect/OAuth2.
