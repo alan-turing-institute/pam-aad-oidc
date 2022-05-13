@@ -7,7 +7,7 @@ build:
 	go build -buildmode=c-shared -o ${MODULE}.so
 
 install:
-	install -D ${MODULE}.so ${DESTDIR}${PREFIX}/lib/x86_64-linux-gnu/security/${MODULE}.so
+	install -D -m 644 ${MODULE}.so ${DESTDIR}${PREFIX}/lib/x86_64-linux-gnu/security/${MODULE}.so
 
 test:
 	go test -cover
