@@ -12,27 +12,35 @@ jobs:
   releases-matrix:
     name: Create release-artifacts
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # build and publish in parallel
-        goos: [linux]
-        goarch: ["386", "amd64", "arm", "arm64"]
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Setup golang version
+      - name: Setup Go build tools
         uses: actions/setup-go@v2
         with:
           go-version: '^1.18'
 
-      - name: Install dependencies
-        run: sudo apt-get install -y libpam-dev
+      - name: Update package repositories
+        run: sudo apt update
+
+      - name: Setup C++ build tools
+        run: sudo apt install -y gcc make
+
+      - name: Install build dependencies
+        run: sudo apt install -y libcurl4-openssl-dev libjansson-dev libpam-dev unzip
 
       - name: Generate the artifacts
         run: |
+          # Build pam_aad_oidc.so
           make
-          mv pam_aad_oidc.so pam_aad_oidc.${{ matrix.goarch }}.so
+
+          # Build libnss
+          wget https://github.com/hmeiland/linuxaad/archive/refs/tags/v0.3.1.zip
+          unzip v0.3.1.zip
+          cd linuxaad-0.3.1/libnss_aad/
+          make
+          mv .libs/libnss_aad.so.2.0 ../../libnss_aad.so
 
       - name: Upload the artifacts
         uses: skx/github-action-publish-binaries@master
