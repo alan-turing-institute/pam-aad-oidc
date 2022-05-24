@@ -18,7 +18,6 @@ type Config struct {
 	TenantID     string `toml:"tenant-id"`
 	ClientId     string `toml:"client-id"`
 	ClientSecret string `toml:"client-secret"`
-	Scope        string `toml:"scope"`
 	GroupName    string `toml:"group-name"`
 	Domain       string `toml:"domain"`
 }
@@ -67,7 +66,7 @@ func ValidateCredentials(configPath string, username string, password string) in
 			TokenURL: "https://login.microsoftonline.com/" + config.TenantID + "/oauth2/v2.0/token",
 		},
 		RedirectURL: "urn:ietf:wg:oauth:2.0:oob", // this is the "no redirect" URL
-		Scopes:      []string{config.Scope},
+		Scopes:      []string{"https://graph.microsoft.com/.default"}, // use the default scopes registered with the application
 	}
 
 	// If there is no suffix then use the default domain

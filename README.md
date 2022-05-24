@@ -28,7 +28,9 @@ This code is based on code from [`pam-keycloak-oidc`](https://github.com/zhaow-d
    - You must **record the value** of this secret at creation time, as it will not be visible later.
 
 3. Under `API permissions`:
-   - Ensure that `Microsoft Graph > User.Read` is enabled
+   - Ensure that the following permissions are enabled
+      - `Microsoft Graph > User.Read.All` (delegated)
+      - `Microsoft Graph > GroupMember.Read.All` (delegated)
    - Select this and click the `Grant admin consent` button (otherwise manual consent is needed from each user)
 
 ## Configure local client
@@ -49,9 +51,6 @@ This code is based on code from [`pam-keycloak-oidc`](https://github.com/zhaow-d
    # The (time-limited) client secret generated for this application above
    client-secret="jbi58~72en43pqpdvwg6enb8r0ml3-hq-0ip2s9c"
 
-   # Microsoft.Graph scope to be requested. Unless there is a particular reason not to, use 'user.read'.
-   scope="user.read"
-
    # Name of AAD group that authenticated users must belong to
    group-name="Allowed PAM users"
 
@@ -59,14 +58,34 @@ This code is based on code from [`pam-keycloak-oidc`](https://github.com/zhaow-d
    domain="mydomain.onmicrosoft.com"
    ```
 
-4. Add configuration lines to the relevant PAM module, referencing the `TOML` file you wrote above.
-   For example, for testing purposes you can add the following to `/etc/pam.d/test`
+4. Create a PAM config file at `/usr/share/pam-configs/aad_oidc` referencing the `TOML` file you wrote above:
+   ```none
+   Name: Allow AzureAD login
+   Default: no
+   Priority: 129
+   Auth-Type: Primary
+   Auth:
+      [success=end default=ignore]	pam_aad_oidc.so config=/etc/pam-aad-oidc.toml
+   Auth-Initial:
+      [success=end default=ignore]	pam_aad_oidc.so config=/etc/pam-aad-oidc.toml
+   ```
+
+4. Install the module with the following command
+
+   ```bash
+   > pam-auth-update --enable aad_oidc
+   ```
+
+## Testing local client
+You can test the module with a dummy PAM entry point.
+
+1. For testing purposes you can add the following to `/etc/pam.d/test`, referencing the `TOML` file you wrote above
 
    ```none
    auth    required     pam_aad_oidc.so config=/etc/pam-aad-oidc.toml
    ```
 
-5. Install `pamtester` in order to test the module.
+2. Install `pamtester` in order to test the module.
 
    ```shell
    # With the password for `myusername` in the file `password.secret`
