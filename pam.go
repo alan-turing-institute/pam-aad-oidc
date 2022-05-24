@@ -9,7 +9,7 @@ import (
 #cgo CFLAGS: -Wall
 #include <security/pam_appl.h>
 #include <stdlib.h>
-#include <pam.h>
+#include "pam.h"
 */
 import "C"
 

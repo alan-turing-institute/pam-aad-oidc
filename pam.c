@@ -7,7 +7,7 @@
 #include <security/pam_ext.h>
 
 // Local includes
-#include <pam.h>
+#include "pam.h"
 
 
 // Retrieve a username from a PAM handle
