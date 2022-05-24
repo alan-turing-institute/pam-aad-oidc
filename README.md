@@ -28,7 +28,9 @@ This code is based on code from [`pam-keycloak-oidc`](https://github.com/zhaow-d
    - You must **record the value** of this secret at creation time, as it will not be visible later.
 
 3. Under `API permissions`:
-   - Ensure that `Microsoft Graph > User.Read` is enabled
+   - Ensure that the following permissions are enabled
+      - `Microsoft Graph > User.Read.All` (delegated)
+      - `Microsoft Graph > GroupMember.Read.All` (delegated)
    - Select this and click the `Grant admin consent` button (otherwise manual consent is needed from each user)
 
 ## Configure local client
@@ -48,9 +50,6 @@ This code is based on code from [`pam-keycloak-oidc`](https://github.com/zhaow-d
 
    # The (time-limited) client secret generated for this application above
    client-secret="jbi58~72en43pqpdvwg6enb8r0ml3-hq-0ip2s9c"
-
-   # Microsoft.Graph scope to be requested. Unless there is a particular reason not to, use 'user.read'.
-   scope="user.read"
 
    # Name of AAD group that authenticated users must belong to
    group-name="Allowed PAM users"
